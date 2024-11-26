@@ -1,12 +1,10 @@
 "use client";
 
-import Demo from "~/components/Demo";
+import dynamic from "next/dynamic";
 
-// import dynamic from "next/dynamic";
-
-// const Demo = dynamic(() => import("~/components/Demo"), {
-//   ssr: false,
-// });
+const Demo = dynamic(() => import("~/components/Demo"), {
+  ssr: false,
+});
 
 export default function Home() {
   return (
