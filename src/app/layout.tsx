@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import "~/app/globals.css";
-import { Providers } from "~/app/providers";
+// import { Providers } from "~/app/providers";
 
 export const metadata: Metadata = {
   title: "Farcaster Frames v2 Demo",
@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   );
