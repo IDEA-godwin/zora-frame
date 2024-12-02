@@ -13,7 +13,7 @@ export default function Demo() {
   const [context, setContext] = useState<FrameContext>()
 
   const { address, chain, isConnected } = useAccount()
-  const { chainId } = useChainId()
+  const chainId  = useChainId()
   const { connect } = useConnect()
   const { disconnect } = useDisconnect()
 
