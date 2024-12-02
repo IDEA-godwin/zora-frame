@@ -47,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="fc:frame" content={JSON.stringify(embed)} />
+        {/* <meta name="fc:frame" content={JSON.stringify(embed)} /> */}
       </head>
       <body>
         <Providers>{children}</Providers>
