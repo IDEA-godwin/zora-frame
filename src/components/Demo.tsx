@@ -49,7 +49,7 @@ export default function Demo() {
 
   return (
     <div className="w-full relative">
-      <div className="flex justify-between content-center mb-3">
+      <div className="flex justify-between items-center mb-3">
         <h1 className="text-2xl font-bold">Launch Zora</h1>
         <div>
           <Button
@@ -63,6 +63,9 @@ export default function Demo() {
         </Button>
         </div>
       </div>
+      {isConnected && <div>
+        Connected with address {address} on chain {chain?.name}
+      </div>}
       <CreateTokenForm />
     </div>
   );
