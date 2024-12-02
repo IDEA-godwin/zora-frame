@@ -84,7 +84,7 @@ export default function CreateTokenForm() {
   return(
     <form className="" onSubmit={handleSubmit(createToken)}>
       {alert && <div className={`p-4 mb-4 text-sm text-${alert.color}-800 rounded-lg bg-${alert.color}-50 dark:bg-gray-800 dark:text-${alert.color}-400`} role="alert">
-        <span className="font-medium">{alert.type} alert!</span> Change a few things up and try submitting again.
+        <span className="font-medium">{alert.type} alert!</span> {alert.message}
       </div>}
       <div className="space-y-5">
         <div className="col-span-full">
