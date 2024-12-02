@@ -48,7 +48,7 @@ export default function Demo() {
   }
 
   return (
-    <div className="w-[300px] mx-auto px-2 relative">
+    <div className="w-[300px] relative">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">Launch Zora</h1>
         <div>

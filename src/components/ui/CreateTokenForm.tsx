@@ -2,17 +2,22 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { Button } from "./Button"
 import { useEffect, useState } from "react"
 import { uploadToIPFS } from "~/services"
+import { useAccount, useChains } from "wagmi"
 
 // import edit_svg from '/pen-fancy-solid.svg'
 
 
 type Inputs = {
+  collection: string
   title: string
   tokenImage: FileList
 }
 
 
 export default function CreateTokenForm() {
+
+  const { chain } = useAccount()
+  const chains = useChains()
 
   const [uploadedFile, setUploadedFile] = useState('')
   const [loading, setLoading] = useState<boolean>(false)
@@ -26,7 +31,6 @@ export default function CreateTokenForm() {
 
   useEffect(() => {
     const image: any = watch('tokenImage')[0]
-
     if(!image) return
     const url = URL.createObjectURL(image)
 
@@ -47,6 +51,23 @@ export default function CreateTokenForm() {
   return(
     <form className="" onSubmit={handleSubmit(createToken)}>
       <div className="space-y-5">
+
+        <div className="col-span-full">
+          <label className="block text-sm/6 font-medium text-gray-900">Collection Address</label>
+          <div className="mt-2">
+            <div className="flex items-center flex-row-reverse rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+              <div className="shrink-0 select-none text-base text-gray-500 sm:text-sm/6">
+                {chain?.name}
+              </div>
+              <input
+                type="text" id="collection" placeholder="0x" {...register("collection", { required: true })}
+                className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+              />
+              { renderError({err: errors.collection, msg: 'specify the collection contract to create token on'}) }
+            </div>
+          </div>
+        </div>
+
         <div className="col-span-full">
           <label className="block text-sm/6 font-medium text-gray-900">Title</label>
           <div className="mt-2">
