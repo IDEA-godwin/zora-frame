@@ -2,7 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { Button } from "./Button"
 import { useEffect, useState } from "react"
 import { uploadToIPFS } from "~/services"
-import { useAccount, useChains } from "wagmi"
+import { useAccount, useChainId, useChains } from "wagmi"
 
 // import edit_svg from '/pen-fancy-solid.svg'
 
@@ -16,7 +16,7 @@ type Inputs = {
 
 export default function CreateTokenForm() {
 
-  const { chain } = useAccount()
+  const chainId = useChainId()
   const chains = useChains()
 
   const [uploadedFile, setUploadedFile] = useState('')
@@ -57,7 +57,7 @@ export default function CreateTokenForm() {
           <div className="mt-2">
             <div className="flex items-center flex-row-reverse rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
               <div className="shrink-0 select-none text-base text-gray-500 sm:text-sm/6">
-                solid: {chain?.name}
+                { chains.filter(c => c.id === chainId)[0].name }
               </div>
               <input
                 type="text" id="collection" placeholder="0x" {...register("collection", { required: true })}

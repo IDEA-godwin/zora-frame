@@ -12,7 +12,7 @@ export default function Demo() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false)
   const [context, setContext] = useState<FrameContext>()
 
-  const { address, chain, isConnected } = useAccount()
+  const { address, isConnected } = useAccount()
   const chainId  = useChainId()
   const { connect } = useConnect()
   const { disconnect } = useDisconnect()
