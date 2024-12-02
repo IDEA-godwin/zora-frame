@@ -6,13 +6,14 @@ import { wagmiConfig as config } from "~/utils/config";
 import { Button } from "~/components/ui/Button";
 import Wallet from "./ui/Wallet";
 import CreateTokenForm from "./ui/CreateTokenForm";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useAccount, useChainId, useConnect, useDisconnect } from "wagmi";
 
 export default function Demo() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false)
   const [context, setContext] = useState<FrameContext>()
 
   const { address, chain, isConnected } = useAccount()
+  const { chainId } = useChainId()
   const { connect } = useConnect()
   const { disconnect } = useDisconnect()
 
@@ -64,7 +65,7 @@ export default function Demo() {
         </div>
       </div>
       {isConnected && <div>
-        Connected with address {address} on chain {chain?.name}
+        Connected with address {address} on chain with id {chainId}
       </div>}
       <CreateTokenForm />
     </div>
