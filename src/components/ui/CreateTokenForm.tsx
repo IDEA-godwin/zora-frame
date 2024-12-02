@@ -57,7 +57,7 @@ export default function CreateTokenForm() {
           <div className="mt-2">
             <div className="flex items-center flex-row-reverse rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
               <div className="shrink-0 select-none text-base text-gray-500 sm:text-sm/6">
-                {chain?.name}
+                solid: {chain?.name}
               </div>
               <input
                 type="text" id="collection" placeholder="0x" {...register("collection", { required: true })}

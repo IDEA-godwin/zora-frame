@@ -12,7 +12,7 @@ export default function Demo() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false)
   const [context, setContext] = useState<FrameContext>()
 
-  const { address, isConnected } = useAccount()
+  const { address, chain, isConnected } = useAccount()
   const { connect } = useConnect()
   const { disconnect } = useDisconnect()
 
@@ -48,8 +48,8 @@ export default function Demo() {
   }
 
   return (
-    <div className="w-[300px] relative">
-      <div className="flex justify-between">
+    <div className="w-full relative">
+      <div className="flex justify-between content-center mb-3">
         <h1 className="text-2xl font-bold">Launch Zora</h1>
         <div>
           <Button
