@@ -10,7 +10,7 @@ import {
 } from "wagmi";
 
 
-import { config } from "~/components/providers/WagmiProvider";
+import { wagmiConfig as config } from "~/utils/config";
 import { truncateAddress } from "~/lib/truncateAddress";
 import { Button } from "./Button"
 
@@ -25,26 +25,26 @@ export default function Wallet() {
      isError: isSendTxError,
      isPending: isSendTxPending,
    } = useSendTransaction();
- 
+
    const { isLoading: isConfirming, isSuccess: isConfirmed } =
      useWaitForTransactionReceipt({
        hash: txHash as `0x${string}`,
      });
- 
+
    const {
      signMessage,
      error: signError,
      isError: isSignError,
      isPending: isSignPending,
    } = useSignMessage();
- 
+
    const {
      signTypedData,
      error: signTypedError,
      isError: isSignTypedError,
      isPending: isSignTypedPending,
    } = useSignTypedData();
- 
+
    const { disconnect } = useDisconnect();
    const { connect } = useConnect();
 
