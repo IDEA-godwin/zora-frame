@@ -15,6 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/* <meta name="fc:frame" content="<stringified FrameEmbed JSON>" /> */}
       <body>
         <Providers>{children}</Providers>
       </body>

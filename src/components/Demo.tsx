@@ -4,7 +4,6 @@ import sdk, { type FrameContext } from "@farcaster/frame-sdk";
 import { wagmiConfig as config } from "~/utils/config";
 
 import { Button } from "~/components/ui/Button";
-import Wallet from "./ui/Wallet";
 import CreateTokenForm from "./ui/CreateTokenForm";
 import { useAccount, useChainId, useConnect, useDisconnect } from "wagmi";
 

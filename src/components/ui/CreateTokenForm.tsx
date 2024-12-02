@@ -48,10 +48,10 @@ export default function CreateTokenForm() {
       setAlert({
         type: 'Success',
         color: 'green',
-        message: 'post made successfully'
+        message: 'post made successfully with transaction hash ' + hash
       })
     }
-  })
+  }, [isConfirmed])
 
   useEffect(() => {
     setTimeout(() => setAlert(undefined), 3000)
