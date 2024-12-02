@@ -3,7 +3,7 @@ export async function GET() {
 
   const config = {
     config: {
-      version: "0.1.0",
+      version: "0.0.0",
       name: "Zora Launcher",
       icon: `${appUrl}/icon.png`,
       splashImage: `${appUrl}/splash.png`,
