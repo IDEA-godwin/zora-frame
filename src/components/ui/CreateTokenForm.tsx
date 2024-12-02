@@ -1,11 +1,8 @@
 import { SubmitHandler, useForm } from "react-hook-form"
 import { Button } from "./Button"
 import { useEffect, useState } from "react"
-import { uploadToIPFS } from "~/services"
-import { useAccount, useChainId, useChains } from "wagmi"
-
-// import edit_svg from '/pen-fancy-solid.svg'
-
+import { buildPostRequest, makeImageTokenMetadata } from "~/services"
+import { BaseError, useChainId, useSwitchChain, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
 
 type Inputs = {
   collection: string
@@ -17,10 +14,18 @@ type Inputs = {
 export default function CreateTokenForm() {
 
   const chainId = useChainId()
-  const chains = useChains()
+  const { chains, switchChain } = useSwitchChain()
+  const { data: hash, isPending, writeContract } = useWriteContract()
 
   const [uploadedFile, setUploadedFile] = useState('')
+  const [chainsOptionVisible, setChainsOptionVisible] = useState(false)
   const [loading, setLoading] = useState<boolean>(false)
+  const [alert, setAlert] = useState<{type: 'Success'|'Danger', message: string, color: string}>()
+
+   const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash
+    })
 
   const {
     register,
@@ -38,9 +43,37 @@ export default function CreateTokenForm() {
     setUploadedFile(url)
   }, [watch('tokenImage')])
 
+  useEffect(() => {
+    if(isConfirmed) {
+      setAlert({
+        type: 'Success',
+        color: 'green',
+        message: 'post made successfully'
+      })
+    }
+  })
+
+  useEffect(() => {
+    setTimeout(() => setAlert(undefined), 3000)
+  }, [alert])
+
   const createToken: SubmitHandler<Inputs> = async (data) =>{
     setLoading(true)
-    const ipfsUrl = await uploadToIPFS(data.tokenImage[0]);
+    try {
+      const tokenMetadataURI = await makeImageTokenMetadata(data.tokenImage[0], data.title);
+      const request = await buildPostRequest({contractAddress: data.collection, tokenMetadataURI})
+      writeContract(request)
+      setLoading(false)
+    }catch (e) {
+      let error = e as BaseError
+      setLoading(false)
+      setAlert({
+        type: 'Danger',
+        color: 'red',
+        message: error.shortMessage || error.message
+      })
+    }
+
   }
 
   const renderError = (error: {err: any, msg: string}) => {
@@ -50,14 +83,21 @@ export default function CreateTokenForm() {
 
   return(
     <form className="" onSubmit={handleSubmit(createToken)}>
+      {alert && <div className={`p-4 mb-4 text-sm text-${alert.color}-800 rounded-lg bg-${alert.color}-50 dark:bg-gray-800 dark:text-${alert.color}-400`} role="alert">
+        <span className="font-medium">{alert.type} alert!</span> Change a few things up and try submitting again.
+      </div>}
       <div className="space-y-5">
-
         <div className="col-span-full">
           <label className="block text-sm/6 font-medium text-gray-900">Collection Address</label>
           <div className="mt-2">
             <div className="flex items-center flex-row-reverse rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-              <div className="shrink-0 select-none text-base text-gray-500 sm:text-sm/6">
-                { chains.filter(c => c.id === chainId)[0].name }
+              <div
+                id="menu-button" aria-expanded="true" aria-haspopup="true"
+                onClick={() => setChainsOptionVisible(!chainsOptionVisible)}
+                className="shrink-0 select-none text-base text-gray-500 sm:text-sm/6 pe-2"
+              >
+                { chainId && chains.filter(c => c.id === chainId)[0].name }
+                { !chainId && "zora"}
               </div>
               <input
                 type="text" id="collection" placeholder="0x" {...register("collection", { required: true })}
@@ -65,6 +105,17 @@ export default function CreateTokenForm() {
               />
               { renderError({err: errors.collection, msg: 'specify the collection contract to create token on'}) }
             </div>
+            <div className={`absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none ${chainsOptionVisible ? 'block' : 'hidden'}`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex={-1}>
+              <div className="py-1" role="none">
+                {/* <!-- Active: "bg-gray-100 text-gray-900 outline-none", Not Active: "text-gray-700" --> */}
+                { chains.map(c => <a
+                  onClick={() => {switchChain({ chainId: c.id }); setChainsOptionVisible(false)}}
+                  role="menuitem" tabIndex={-1} id={`menu-item-${c.id}`}
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >{ c.name }</a>)}
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -116,7 +167,7 @@ export default function CreateTokenForm() {
         { renderError({err: errors.tokenImage, msg: 'upload token image'}) }
 
         <div className="col-span-full">
-          <Button isLoading={loading} onClick={handleSubmit(createToken)}>Post</Button>
+          <Button isLoading={loading || isPending || isConfirming} onClick={handleSubmit(createToken)}>Post</Button>
         </div>
       </div>
     </form>

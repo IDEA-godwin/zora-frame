@@ -6,10 +6,10 @@ import { frameConnector } from "~/lib/connector";
 import { PinataSDK } from "pinata-web3"
 
 export const wagmiConfig = createConfig({
-  chains: [base, zora],
+  chains: [zora, base],
   transports: {
-    [base.id]: http(),
-    [zora.id]: http()
+    [zora.id]: http(),
+    [base.id]: http()
   },
   connectors: [frameConnector()],
 });
