@@ -6,14 +6,15 @@ import { wagmiConfig as config } from "~/utils/config";
 import { Button } from "~/components/ui/Button";
 import Wallet from "./ui/Wallet";
 import CreateTokenForm from "./ui/CreateTokenForm";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 export default function Demo() {
-  const [isSDKLoaded, setIsSDKLoaded] = useState(false);
-  const [context, setContext] = useState<FrameContext>();
+  const [isSDKLoaded, setIsSDKLoaded] = useState(false)
+  const [context, setContext] = useState<FrameContext>()
 
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useAccount()
   const { connect } = useConnect()
+  const { disconnect } = useDisconnect()
 
   useEffect(() => {
     const load = async () => {
@@ -47,8 +48,21 @@ export default function Demo() {
   }
 
   return (
-    <div className="w-[300px] mx-auto py-4 px-2 relative">
-      <h1 className="text-2xl font-bold text-center mb-4">Launch Zora</h1>
+    <div className="w-[300px] mx-auto px-2 relative">
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold">Launch Zora</h1>
+        <div>
+          <Button
+            onClick={() =>
+              isConnected
+                ? disconnect()
+                : connect({ connector: config.connectors[0] })
+            }
+          >
+            {isConnected ? "Disconnect" : "Connect"}
+        </Button>
+        </div>
+      </div>
       <CreateTokenForm />
     </div>
   );
