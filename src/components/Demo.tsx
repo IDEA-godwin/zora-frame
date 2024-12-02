@@ -1,15 +1,19 @@
 import { useEffect, useCallback, useState } from "react";
 import sdk, { type FrameContext } from "@farcaster/frame-sdk";
 
+import { wagmiConfig as config } from "~/utils/config";
+
 import { Button } from "~/components/ui/Button";
 import Wallet from "./ui/Wallet";
-import CreateTokenButton from "./ui/CreateTokenButton";
 import CreateTokenForm from "./ui/CreateTokenForm";
+import { useAccount, useConnect } from "wagmi";
 
 export default function Demo() {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<FrameContext>();
-  const [isContextOpen, setIsContextOpen] = useState(false);
+
+  const { address, isConnected } = useAccount();
+  const { connect } = useConnect()
 
   useEffect(() => {
     const load = async () => {
@@ -22,16 +26,20 @@ export default function Demo() {
     }
   }, [isSDKLoaded]);
 
+  useEffect(() => {
+    if(sdk && isSDKLoaded) {
+      if(!isConnected){
+        connect({ connector: config.connectors[0] })
+      }
+    }
+  }, [isSDKLoaded])
+
   const openUrl = useCallback(() => {
     sdk.actions.openUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
   }, []);
 
   const close = useCallback(() => {
     sdk.actions.close();
-  }, []);
-
-  const toggleContext = useCallback(() => {
-    setIsContextOpen((prev) => !prev);
   }, []);
 
   if (!isSDKLoaded) {
