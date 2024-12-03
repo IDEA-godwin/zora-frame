@@ -10,7 +10,7 @@ export async function GET() {
     frame: {
       version: "0.0.0",
       name: "Zora Launcher",
-      icon: `${appUrl}/icon.png`,
+      icon: `${appUrl}/Zorb.png`,
       splashImage: `${appUrl}/splash.png`,
       splashBackgroundColor: "#f7f7f7",
       homeUrl: appUrl
