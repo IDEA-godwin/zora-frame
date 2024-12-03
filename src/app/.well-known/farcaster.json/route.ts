@@ -11,7 +11,7 @@ export async function GET() {
       version: "0.0.0",
       name: "Zora Launcher",
       icon: `${appUrl}/Zorb.png`,
-      splashImage: `${appUrl}/splash.png`,
+      splashImage: `${appUrl}/Zorb.png`,
       splashBackgroundColor: "#f7f7f7",
       homeUrl: appUrl
     },
