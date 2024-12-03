@@ -11,7 +11,7 @@ export const wagmiConfig = createConfig({
   chains: [zora, base],
   connectors: [
     frameConnector(),
-    walletConnect({ projectId: process.env.WALLET_CONNECT_ID as string })
+    walletConnect({ projectId: process.env.WALLET_CONNECT_ID! })
   ],
   client({ chain }) {
     return createClient({ chain, transport: http() })

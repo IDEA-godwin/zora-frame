@@ -1,6 +1,6 @@
 
 
-import { createCreatorClient, makeMediaTokenMetadata } from "@zoralabs/protocol-sdk"
+import { ContractMetadataJson, createCreatorClient, makeMediaTokenMetadata } from "@zoralabs/protocol-sdk"
 import { publicActions } from "viem"
 import { useWalletClient, useClient } from "wagmi"
 import { pinata, wagmiConfig as config } from "~/utils/config"
@@ -30,7 +30,7 @@ export const buildPostRequest = async ({contractAddress, tokenMetadaURI, chainId
 
 export async function makeImageTokenMetadata(imageFile: File, title: string) {
   // upload image and thumbnail to Pinata
-  const { IpfsHash } = await pinata.upload.file(imageFile);;
+  const { IpfsHash } = await pinata.upload.file(imageFile)
 
   // build token metadata json from the text and thumbnail file
   // ipfs urls
@@ -42,6 +42,17 @@ export async function makeImageTokenMetadata(imageFile: File, title: string) {
   const pinResponse = await pinata.upload.json(metadataJson);
 
   return `ipfs://${pinResponse.IpfsHash}`;
+}
+
+export async function makeContractMetadata(imageFile: File, name: string, description: string) {
+  const { IpfsHash } = await pinata.upload.file(imageFile)
+  const metadataJson: ContractMetadataJson = {
+    description,
+    image: `ipfs://${IpfsHash}`,
+    name
+  }
+  const { IpfsHash: hash } = await pinata.upload.json(metadataJson)
+  return `ipfs://${hash}`
 }
 
 export const uploadToIPFS = async (img: File): Promise<{err: boolean, message: string, url?: string}> => {
