@@ -1,7 +1,7 @@
 
 
 import { createCreatorClient, makeMediaTokenMetadata } from "@zoralabs/protocol-sdk"
-import { usePublicClient, useChainId, useWalletClient, useWriteContract } from "wagmi"
+import { usePublicClient, useChainId, useWalletClient } from "wagmi"
 import { pinata } from "~/utils/config"
 
 export const buildPostRequest = async ({contractAddress, tokenMetadaURI}: any) => {

@@ -20,7 +20,7 @@ export default function CreateTokenForm() {
   const [uploadedFile, setUploadedFile] = useState('')
   const [chainsOptionVisible, setChainsOptionVisible] = useState(false)
   const [loading, setLoading] = useState<boolean>(false)
-  const [alert, setAlert] = useState<{type: 'Success'|'Danger', message: string, color: string}>()
+  const [alert, setAlert] = useState<{type: 'Success'|'Danger', message: string, class: string}>()
 
    const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
@@ -47,7 +47,7 @@ export default function CreateTokenForm() {
     if(isConfirmed) {
       setAlert({
         type: 'Success',
-        color: 'green',
+        class: ' bg-green-50  text-green-800 dark:text-green-400',
         message: 'post made successfully with transaction hash ' + hash
       })
     }
@@ -69,7 +69,7 @@ export default function CreateTokenForm() {
       setLoading(false)
       setAlert({
         type: 'Danger',
-        color: 'red',
+        class: ' bg-red-50  text-red-800 dark:text-red-400',
         message: error.shortMessage || error.message
       })
     }
@@ -83,7 +83,7 @@ export default function CreateTokenForm() {
 
   return(
     <form className="" onSubmit={handleSubmit(createToken)}>
-      {alert && <div className={`p-4 mb-4 text-sm text-${alert.color}-800 rounded-lg bg-${alert.color}-50 dark:bg-gray-800 dark:text-${alert.color}-400`} role="alert">
+      {alert && <div className={`p-4 mb-4 text-sm rounded-lg dark:bg-gray-800 ${alert.class}`} role="alert">
         <span className="font-medium">{alert.type} alert!</span> {alert.message}
       </div>}
       <div className="space-y-5">
@@ -110,7 +110,7 @@ export default function CreateTokenForm() {
                 {/* <!-- Active: "bg-gray-100 text-gray-900 outline-none", Not Active: "text-gray-700" --> */}
                 { chains.map(c => <a
                   onClick={() => {switchChain({ chainId: c.id }); setChainsOptionVisible(false)}}
-                  role="menuitem" tabIndex={-1} id={`menu-item-${c.id}`}
+                  role="menuitem" tabIndex={-1} id={`menu-item-${c.id}`} key={c.id}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >{ c.name }</a>)}
               </div>
