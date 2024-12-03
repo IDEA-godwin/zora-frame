@@ -74,11 +74,12 @@ export default function CreateTokenForm() {
 
   useEffect(() => {
     if(isConfirmed) {
-      
+      const chainName = chains.filter(c => chainId === c.id).map(c => c.name)[0].toLowerCase()
+      const link =`${process.env.NEXT_PUBLIC_ZORA_BASEURL}/${chainName}:${linkTemplate?.contract}/${linkTemplate?.tokenId}`
       setAlert({
         type: 'Success',
         class: ' bg-green-50  text-green-800 dark:text-green-400',
-        message: 'post made successfully with transaction hash ' + hash
+        message: `post made successfully with transaction hash: ${hash}\nZora link: ${link}`
       })
     }
   }, [isConfirmed])
