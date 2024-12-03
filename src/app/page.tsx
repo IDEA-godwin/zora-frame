@@ -37,9 +37,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function Home() {
 
-  useEffect(() => {
-    console.log(appUrl)
-  })
   return (
     <App />
   );
