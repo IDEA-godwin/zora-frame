@@ -1,18 +1,19 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import sdk, { type FrameContext } from "@farcaster/frame-sdk";
 
 import { wagmiConfig as config } from "~/utils/config";
 
 import { Button } from "~/components/ui/Button";
 import CreateTokenForm from "./ui/CreateTokenForm";
-import { useAccount, useChainId, useConnect, useDisconnect } from "wagmi";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
 
-export default function Demo() {
+export default function Demo(
+  { title }: { title?: string } = { title: "Zora Launcher" }
+) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false)
   const [context, setContext] = useState<FrameContext>()
 
-  const { address, isConnected } = useAccount()
-  const chainId  = useChainId()
+  const { isConnected } = useAccount()
   const { connect } = useConnect()
   const { disconnect } = useDisconnect()
 
@@ -25,23 +26,12 @@ export default function Demo() {
       setIsSDKLoaded(true);
       load();
     }
-  }, [isSDKLoaded]);
-
-  useEffect(() => {
     if(sdk && isSDKLoaded) {
       if(!isConnected){
         connect({ connector: config.connectors[0] })
       }
     }
-  }, [isSDKLoaded])
-
-  const openUrl = useCallback(() => {
-    sdk.actions.openUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-  }, []);
-
-  const close = useCallback(() => {
-    sdk.actions.close();
-  }, []);
+  }, [isSDKLoaded]);
 
   if (!isSDKLoaded) {
     return <div>Loading...</div>;
