@@ -54,7 +54,7 @@ export default function CreateTokenForm() {
   }, [isConfirmed])
 
   useEffect(() => {
-    setTimeout(() => setAlert(undefined), 3000)
+    setTimeout(() => setAlert(undefined), 6000)
   }, [alert])
 
   const createToken: SubmitHandler<Inputs> = async (data) =>{
