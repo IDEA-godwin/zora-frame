@@ -53,17 +53,17 @@ export default function CreateTokenForm() {
   } = useForm<Inputs>()
 
   useEffect(() => {
-      const image: any = watch('tokenImage')[0]
-      if(!image) return
-      const url = URL.createObjectURL(image)
+    if(!watch('tokenImage') || watch('tokenImage').length < 1) return
+    const image: any = watch('tokenImage')[0]
+    const url = URL.createObjectURL(image)
 
-      console.log(url)
-      setUploadedFile(url)
+    console.log(url)
+    setUploadedFile(url)
   }, [watch('tokenImage')])
 
   useEffect(() => {
+    if(!watch('collectionForm.image') || watch('collectionForm.image').length < 1) return
       const img: any = watch('collectionForm.image')[0]
-      if(!img) return
       const imgUrl = URL.createObjectURL(img)
 
       console.log(imgUrl)
