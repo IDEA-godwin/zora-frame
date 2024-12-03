@@ -1,8 +1,14 @@
 import { SubmitHandler, useForm } from "react-hook-form"
 import { Button } from "./Button"
 import { useEffect, useState } from "react"
-import { buildPostRequest, makeImageTokenMetadata } from "~/services"
-import { BaseError, useChainId, useSwitchChain, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
+import { makeImageTokenMetadata } from "~/services"
+import { publicActions } from "viem"
+import { createCreatorClient, makeMediaTokenMetadata } from "@zoralabs/protocol-sdk"
+import {
+  BaseError, useChainId, useSwitchChain,
+  useWriteContract, useWaitForTransactionReceipt,
+  useWalletClient, useClient
+} from "wagmi"
 
 type Inputs = {
   collection: string
@@ -21,6 +27,9 @@ export default function CreateTokenForm() {
   const [chainsOptionVisible, setChainsOptionVisible] = useState(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [alert, setAlert] = useState<{type: 'Success'|'Danger', message: string, class: string}>()
+
+  const publicClient = useClient()?.extend(publicActions) as any
+  const { data } = useWalletClient()
 
    const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
@@ -61,10 +70,10 @@ export default function CreateTokenForm() {
     setLoading(true)
     try {
       const tokenMetadataURI = await makeImageTokenMetadata(data.tokenImage[0], data.title);
-      const request = await buildPostRequest({contractAddress: data.collection, tokenMetadataURI})
-      writeContract(request)
+      await buildPostRequest({contractAddress: data.collection, tokenMetadataURI, chainId})
       setLoading(false)
     }catch (e) {
+      console.log(e)
       let error = e as BaseError
       setLoading(false)
       setAlert({
@@ -72,6 +81,25 @@ export default function CreateTokenForm() {
         class: ' bg-red-50  text-red-800 dark:text-red-400',
         message: error.shortMessage || error.message
       })
+    }
+  }
+
+  const buildPostRequest = async ({contractAddress, tokenMetadaURI, chainId}: any) => {
+
+    const zoraClient = createCreatorClient({ chainId, publicClient })
+    try {
+      const { parameters } = await zoraClient.create1155OnExistingContract({
+        contractAddress,
+        token: {
+          tokenMetadataURI: tokenMetadaURI
+        },
+        account: data?.account as any
+      })
+      const { request } = await publicClient.simulateContract(parameters);
+
+      writeContract(request)
+    } catch (e) {
+      throw e
     }
 
   }

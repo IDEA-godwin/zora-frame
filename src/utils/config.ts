@@ -4,14 +4,18 @@ import { createConfig, http } from "wagmi";
 import { base, zora } from "viem/chains";
 import { frameConnector } from "~/lib/connector";
 import { PinataSDK } from "pinata-web3"
+import { walletConnect } from "wagmi/connectors";
+import { createClient } from "viem";
 
 export const wagmiConfig = createConfig({
   chains: [zora, base],
-  transports: {
-    [zora.id]: http(),
-    [base.id]: http()
+  connectors: [
+    frameConnector(),
+    walletConnect({ projectId: process.env.WALLET_CONNECT_ID as string })
+  ],
+  client({ chain }) {
+    return createClient({ chain, transport: http() })
   },
-  connectors: [frameConnector()],
 });
 
 export const pinata = new PinataSDK({

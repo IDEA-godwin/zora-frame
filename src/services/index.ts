@@ -1,13 +1,14 @@
 
 
 import { createCreatorClient, makeMediaTokenMetadata } from "@zoralabs/protocol-sdk"
-import { usePublicClient, useChainId, useWalletClient } from "wagmi"
-import { pinata } from "~/utils/config"
+import { publicActions } from "viem"
+import { useWalletClient, useClient } from "wagmi"
+import { pinata, wagmiConfig as config } from "~/utils/config"
 
-export const buildPostRequest = async ({contractAddress, tokenMetadaURI}: any) => {
-  const publicClient = usePublicClient() as any
-  const chainId = useChainId()
-  const zoraClient = createCreatorClient({chainId, publicClient})
+export const buildPostRequest = async ({contractAddress, tokenMetadaURI, chainId}: any) => {
+
+  const publicClient = useClient()?.extend(publicActions) as any
+  const zoraClient = createCreatorClient({ chainId, publicClient })
 
   const { data } = useWalletClient()
 

@@ -6,7 +6,8 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true
   },
   env: {
-    PINATA_JWT: process.env.PINATA_JWT
+    PINATA_JWT: process.env.PINATA_JWT,
+    WALLET_CONNECT_ID:  process.env.WALLET_CONNECT_ID
   }
 };
 
