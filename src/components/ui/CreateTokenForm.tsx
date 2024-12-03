@@ -63,13 +63,13 @@ export default function CreateTokenForm() {
 
   useEffect(() => {
     if(!watch('collectionForm.image') || watch('collectionForm.image').length < 1) return
+
       const img: any = watch('collectionForm.image')[0]
+      console.log(img)
       const imgUrl = URL.createObjectURL(img)
 
       console.log(imgUrl)
       setUploadedCollectionFile(imgUrl)
-
-
   }, [watch('collectionForm.image')])
 
   useEffect(() => {
@@ -222,7 +222,7 @@ export default function CreateTokenForm() {
                     <p className="text-xs/5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
                   </div>
                 </div>}
-                {uploadedFile && <div className="flex justify-center px-3 py-1">
+                {uploadedCollectionFile && <div className="flex justify-center px-3 py-1">
                   <div className="relative">
                     <img src={uploadedCollectionFile} alt="token_image" />
                   </div>
