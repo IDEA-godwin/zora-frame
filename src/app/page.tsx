@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import App from "./app";
+import { useEffect } from "react";
 
 const appUrl = process.env.NEXT_PUBLIC_URL;
 
@@ -21,6 +22,7 @@ const frame = {
 export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
+
   return {
     title: "Zora Launcher",
     openGraph: {
@@ -34,6 +36,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function Home() {
+
+  useEffect(() => {
+    console.log(appUrl)
+  })
   return (
     <App />
   );
